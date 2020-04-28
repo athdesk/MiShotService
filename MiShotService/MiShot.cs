@@ -4,6 +4,7 @@ using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
 using MiShotService.Properties;
+using murrayju.ProcessExtensions;
 
 namespace MiShotService
 {
@@ -11,7 +12,6 @@ namespace MiShotService
     public partial class MiShot : ServiceBase
     {
         private static string HelperPath;
-        private static IntPtr UserToken;
 
         private static void ExtractHelper()
         {
@@ -31,21 +31,12 @@ namespace MiShotService
             }
         }
 
-        private static void GetUserToken()
-        {
-            do
-            {
-                Thread.Sleep(100);
-            } while (!ExecUtil.GetSessionUserToken(ref UserToken));
-        }
-
 		public static void OpenScreenshotTool()
 		{
-            GetUserToken();
             ExtractHelper();
-            ExecUtil.StartWithToken(HelperPath, UserToken);
-            Thread.Sleep(700);
-            try { File.Delete(HelperPath); } catch(Exception) { }
+			ProcessExtensions.StartProcessAsCurrentUser(HelperPath, null, null, false);
+            Thread.Sleep(150);
+            File.Delete(HelperPath);
         }
 
         private static void AttachHandler()
@@ -62,7 +53,7 @@ namespace MiShotService
         protected override void OnStart(string[] args)
         {
 			AttachHandler();
-            GetUserToken();
+            OpenScreenshotTool(); //Somehow the first instance does not run
         }
 
         protected override void OnStop()

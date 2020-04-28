@@ -87,7 +87,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExecUtil.cs" />
     <Compile Include="FwInterface.cs" />
     <Compile Include="MiShot.cs">
       <SubType>Component</SubType>
