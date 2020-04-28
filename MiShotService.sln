@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiShotService", "MiShotServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiShotHelper", "MiShotHelper\MiShotHelper.csproj", "{32C05BEC-90A6-45C3-99CB-D80D46402995}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiFormHelper", "MiFormHelper\MiFormHelper.csproj", "{24107C8B-6BD1-4B6A-8553-CD7E065F8ECA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{32C05BEC-90A6-45C3-99CB-D80D46402995}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32C05BEC-90A6-45C3-99CB-D80D46402995}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32C05BEC-90A6-45C3-99CB-D80D46402995}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24107C8B-6BD1-4B6A-8553-CD7E065F8ECA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24107C8B-6BD1-4B6A-8553-CD7E065F8ECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24107C8B-6BD1-4B6A-8553-CD7E065F8ECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24107C8B-6BD1-4B6A-8553-CD7E065F8ECA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -53,7 +53,6 @@ namespace MiShotService
         protected override void OnStart(string[] args)
         {
 			AttachHandler();
-            OpenScreenshotTool(); //Somehow the first instance does not run
         }
 
         protected override void OnStop()

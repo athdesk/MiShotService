@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace MiShotHelper
 {
@@ -78,6 +79,7 @@ namespace MiShotHelper
 		{
 			UnfocusAll();
 			ShowWindow(GetConsoleWindow(), SW_HIDE);
+			Thread.Sleep(1500);
 			OpenScreenshotTool();
 		}
 	}
