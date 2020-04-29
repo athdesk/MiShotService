@@ -215,7 +215,6 @@ namespace MiShotService
         {
             ExePath = Assembly.GetEntryAssembly().Location;
             RegCmdLine = ExePath + " " + ARG_STANDALONE;
-            IsOnStartup();
             if (Args.Length > 0)
             {
                 switch (Args[0])
