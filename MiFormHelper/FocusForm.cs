@@ -58,6 +58,7 @@ namespace MiFormHelper
 
 		private void OffloadTick(object sender, EventArgs e)
 		{
+			this.Activate();
 			OffloadTimer.Enabled = false;
 			OpenScreenshotTool();
 			Application.Exit();

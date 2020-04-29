@@ -1,5 +1,9 @@
 # MiProShotService
 
+<div style="text-align: center">
+    <img src="https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fathdesk%2FMiShotService" alt="Hits">
+</div>
+
 A lightweight windows service meant to allow the use of the dedicated screenshot key without the proprietary MiOSD app, for Xiaomi Mi Notebook Pro users.
 
 ## How does it work
@@ -18,12 +22,13 @@ The helper program spawns an invisible Windows Form, and steals focus from the u
 ## How to build and install
 
 Open in Visual Studio, just make sure to build MiFormHelper first, and then MiShotService. <br>
-After building, you can install and start the service by doing this in an elevated command shell:
+After building the program, or downloading a binary release, you can install and start the service by doing this in an elevated command shell:
 
 ```
 installutil MiShotService.exe
 net start mishot
 ```
+You can now also install the service using it's GUI, just open the executable as you would with any normal program, and press Install. <br> Note that the service is registered by it's current path, so if you want to install it for the long term, copying it first in the wanted target directory is recommended. I personally use `C:\MiShot\MiShotService.exe` , but anything will work.
 
 ## How to uninstall
 
@@ -31,6 +36,8 @@ net start mishot
 net stop mishot
 sc delete MiShotService
 ```
+
+Or you can use the same GUI you used to install it. Just open the executable and click Uninstall. The file will not be removed, only the service will be unregistered.
 
 <hr>
 
