@@ -204,38 +204,30 @@ namespace MiShotService
         {
             ExePath = Assembly.GetEntryAssembly().Location;
             RegCmdLine = ExePath + " " + ARG_STANDALONE;
-            if (Environment.UserInteractive)
+            if (Args.Length > 0)
             {
-                if (Args.Length > 0)
+                switch (Args[0])
                 {
-                    switch (Args[0])
-                    {
-                        case ARG_INSTALL:
-                            CaseInstall();
-                            break;
-                        case ARG_STANDALONE:
-                            CaseStandalone();
-                            break;
-                        case ARG_UNINSTALL:
-                            CaseUninstall();
-                            break;
-                        case ARG_KILL:
-                            CaseKill();
-                            break;
-                        default:
-                            OpenForm();
-                            break;
-                    }
-                } else
-                {
-                    OpenForm();
+                    case ARG_INSTALL:
+                        CaseInstall();
+                        break;
+                    case ARG_STANDALONE:
+                        CaseStandalone();
+                        break;
+                    case ARG_UNINSTALL:
+                        CaseUninstall();
+                        break;
+                    case ARG_KILL:
+                        CaseKill();
+                        break;
+                    default:
+                        OpenForm();
+                        break;
                 }
-            }
-            else
+            } else
             {
-                // TODO: fix
+                OpenForm();
             }
-        
         }
     }
 }

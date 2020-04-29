@@ -1,9 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
-using System.ServiceProcess;
-using System.Windows.Forms;
-using MiShotService.Properties;
+using System.Threading;
 
 namespace MiShotService
 {
@@ -12,10 +8,16 @@ namespace MiShotService
     {
         private static FwInterface FWI;
 
-        public static void OpenScreenshotTool()
+        private static void OpenScreenshotTool()
         {
-            MessageBox.Show("You are awesome!");
+            HelperForm TempForm = new HelperForm();
+            TempForm.Show();
+            do
+                Thread.Sleep(10);
+            while (!TempForm.Ready);
+            TempForm.Dispose();
         }
+
         private static void AttachHandler()
         {
             FWI = new FwInterface();
@@ -26,7 +28,6 @@ namespace MiShotService
         {
             if (!ExecUtil.KillOthers())
                 ExecUtil.ElevateMe(Program.ARG_STANDALONE);
-
             AttachHandler();
         }
 
