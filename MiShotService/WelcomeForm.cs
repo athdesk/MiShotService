@@ -20,12 +20,12 @@ namespace MiShotService
 
         private void ButtonInstall_Click(object sender, EventArgs e)
         {
-            Program.CaseInstall();
+            Program.CaseInstall(true);
         }
 
         private void ButtonUninstall_Click(object sender, EventArgs e)
         {
-            Program.CaseUninstall();
+            Program.CaseUninstall(true);
         }
 
         private void ButtonRun_Click(object sender, EventArgs e)

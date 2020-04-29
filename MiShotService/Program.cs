@@ -127,8 +127,11 @@ namespace MiShotService
         public const string ARG_INSTALL = "install";
         public const string ARG_UNINSTALL = "uninstall";
         public const string ARG_STANDALONE = "standalone";
+        private const string SERVICE_NAME = "MiShotService";
+        private const string DISPLAY_NAME = "MiShot";
 
         public static MiShot RunningInstance = null;
+        private static string ExePath;
 
         private static void RunService()
         {
@@ -140,17 +143,8 @@ namespace MiShotService
             ServiceBase.Run(ServicesToRun);
         }
 
-        private static void KeepThreadBusy()
-        {
-            while (true)
-            {
-                Thread.Sleep(10000);
-            }
-        }
-
         private static void ElevateMe(string CmdArgs)
         {
-            string ExePath = Assembly.GetEntryAssembly().Location;
             ProcessStartInfo StartMe = new ProcessStartInfo(ExePath, CmdArgs)
             {
                 UseShellExecute = true,
@@ -161,22 +155,37 @@ namespace MiShotService
             Application.Exit();
         }
 
-        public static void CaseInstall()
+        public static void CaseInstall(bool FromForm = false)
         {
             if (!IsProcessElevated)
             {
                 ElevateMe(ARG_INSTALL);
             } else
             {
-                /////////////
+                bool Reinstall = ServiceInstaller.ServiceIsInstalled(SERVICE_NAME);
+                          
+
                 Application.EnableVisualStyles();
-                MessageBox.Show("Successfully installed the MiShot Service");
-                OpenForm();
+                if (Reinstall)
+                {
+                    MessageBox.Show("Service is already installed");
+                }
+                else
+                {
+                    ServiceInstaller.InstallAndStart(SERVICE_NAME, DISPLAY_NAME, ExePath);
+                    MessageBox.Show("Successfully installed the MiShot Service");
+                }
+
+                
+                if (!FromForm)
+                {
+                    OpenForm();
+                }
             }
         }
 
 
-        public static void CaseUninstall()
+        public static void CaseUninstall(bool FromForm = false)
         {
             if (!IsProcessElevated)
             {
@@ -184,10 +193,22 @@ namespace MiShotService
             }
             else
             {
-                ////////////////
                 Application.EnableVisualStyles();
-                MessageBox.Show("Successfully uninstalled the MiShot Service");
-                OpenForm();
+                bool WasInstalled = ServiceInstaller.ServiceIsInstalled(SERVICE_NAME);
+                if (WasInstalled)
+                {
+                    ServiceInstaller.Uninstall(SERVICE_NAME);
+                    MessageBox.Show("Successfully uninstalled the MiShot Service");
+                }
+                else
+                {
+                    MessageBox.Show("Service was not installed");
+                }
+                
+                if (!FromForm)
+                {
+                    OpenForm();
+                }
             }
         }
 
@@ -232,7 +253,7 @@ namespace MiShotService
                 ElevateMe(ARG_KILL);
             }
 
-            if (IsProcessElevated && !FromForm)
+            if (!FromForm)
             {
                 OpenForm();
             }
@@ -248,6 +269,7 @@ namespace MiShotService
 
         static void Main(string[] Args)
         {
+            ExePath = Assembly.GetEntryAssembly().Location;
             if (Environment.UserInteractive)
             {
                 if (Args.Length > 0)
