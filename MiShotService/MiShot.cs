@@ -45,10 +45,15 @@ namespace MiShotService
             InitializeComponent();
         }
 
-        protected override void OnStart(string[] args)
+        public void Start()
         {
             ExtractHelper();
             AttachHandler();
+        }
+
+        protected override void OnStart(string[] args)
+        {
+            Start();
         }
 
         protected override void OnStop()
