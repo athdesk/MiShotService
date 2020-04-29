@@ -28,13 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.OffloadTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // OffloadTimer
+            // 
+            this.OffloadTimer.Interval = 10;
+            this.OffloadTimer.Tick += new System.EventHandler(this.OffloadTick);
             // 
             // FocusForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1, 1);
+            this.ClientSize = new System.Drawing.Size(100, 100);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FocusForm";
@@ -48,6 +55,8 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer OffloadTimer;
     }
 }
 
