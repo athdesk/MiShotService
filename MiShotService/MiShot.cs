@@ -10,7 +10,7 @@ namespace MiShotService
     public partial class MiShot : ServiceBase
     {
         private static string HelperPath;
-
+        private static FwInterface FWI;
         private static void ExtractHelper()
         {
             HelperPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\MiShotHelper.exe";
@@ -34,10 +34,10 @@ namespace MiShotService
 			ExecUtil.StartHelper(HelperPath);
         }
 
-        private static void AttachHandler()
+        private void AttachHandler()
         {
-            FwInterface.EventScreenshot += OpenScreenshotTool;
-            FwInterface.AttachEvents();
+            FWI = new FwInterface();
+            FWI.EventScreenshot += OpenScreenshotTool;
         }
 
 		public MiShot()
@@ -58,6 +58,7 @@ namespace MiShotService
 
         protected override void OnStop()
         {
+            FWI.Dispose();
             try
             {
                 File.Delete(HelperPath);

@@ -13,8 +13,6 @@ namespace MiShotService
     public partial class WelcomeForm : Form
     {
 
-        private static MiShot StandaloneInstance = null;
-
         public WelcomeForm()
         {
             InitializeComponent();
@@ -32,22 +30,20 @@ namespace MiShotService
 
         private void ButtonRun_Click(object sender, EventArgs e)
         {
-            if (StandaloneInstance != null)
+            if (Program.RunningInstance != null)
             {
-                StandaloneInstance.Stop();
-                StandaloneInstance.Dispose();
-                StandaloneInstance = null;
+                Program.RunningInstance.Stop();
+                Program.RunningInstance.Dispose();
             }
-            StandaloneInstance = Program.CaseStandalone();
+            Program.CaseStandalone();
         }
 
         private void ButtonKill_Click(object sender, EventArgs e)
         {
-            if (StandaloneInstance != null)
+            if (Program.RunningInstance != null)
             {
-                StandaloneInstance.Stop();
-                StandaloneInstance.Dispose();
-                StandaloneInstance = null;
+                Program.RunningInstance.Stop();
+                Program.RunningInstance.Dispose();
             }
             Program.CaseKill(true);
         }

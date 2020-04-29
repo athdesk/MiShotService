@@ -128,6 +128,8 @@ namespace MiShotService
         public const string ARG_UNINSTALL = "uninstall";
         public const string ARG_STANDALONE = "standalone";
 
+        public static MiShot RunningInstance = null;
+
         private static void RunService()
         {
             ServiceBase[] ServicesToRun;
@@ -189,11 +191,16 @@ namespace MiShotService
             }
         }
 
-        public static MiShot CaseStandalone()
+        public static void CaseStandalone()
         {
-            MiShot ServInstance = new MiShot();
-            ServInstance.Start();
-            return ServInstance;
+            if (RunningInstance == null) 
+            { 
+                RunningInstance = new MiShot(); 
+            } else
+            {
+                RunningInstance.Stop();
+            }
+            RunningInstance.Start();
         }
 
         public static void CaseKill(bool FromForm = false)
