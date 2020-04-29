@@ -1,5 +1,9 @@
 # MiProShotService
 
+<div style="text-align: center">
+    <img src="https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fathdesk%2FMiShotService" alt="Hits">
+</div>
+
 A lightweight windows service meant to allow the use of the dedicated screenshot key without the proprietary MiOSD app, for Xiaomi Mi Notebook Pro users.
 
 ## How does it work
