@@ -36,5 +36,10 @@ namespace MiShotService
             else
                 Program.CaseUninstall(true);
         }
+
+        private void WelcomeForm_Load(object sender, EventArgs e)
+        {
+            CheckAutoStart.Checked = Program.IsOnStartup();
+        }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.ServiceProcess;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -131,13 +129,26 @@ namespace MiShotService
 
         public static void SetStartup(bool AutoStart)
         {
-            RegistryKey rk = Registry.CurrentUser.OpenSubKey
+            RegistryKey RunKey = Registry.CurrentUser.OpenSubKey
             ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
             if (AutoStart)
-                rk.SetValue(DISPLAY_NAME, RegCmdLine);
+                RunKey.SetValue(DISPLAY_NAME, RegCmdLine);
             else
-                rk.DeleteValue(DISPLAY_NAME, false);
+                RunKey.DeleteValue(DISPLAY_NAME, false);
+        }
+
+        public static bool IsOnStartup()
+        {
+            RegistryKey RunKey = Registry.CurrentUser.OpenSubKey
+            ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+            var RunValue = RunKey.GetValue(DISPLAY_NAME);
+            if (RunValue == null)
+                return false;
+            else
+                return RunValue.ToString().Equals(RegCmdLine);
+            
         }
 
         private static void StallThread()
@@ -204,6 +215,7 @@ namespace MiShotService
         {
             ExePath = Assembly.GetEntryAssembly().Location;
             RegCmdLine = ExePath + " " + ARG_STANDALONE;
+            IsOnStartup();
             if (Args.Length > 0)
             {
                 switch (Args[0])

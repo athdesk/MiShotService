@@ -80,6 +80,7 @@
             this.Name = "WelcomeForm";
             this.ShowIcon = false;
             this.Text = "MiShot";
+            this.Load += new System.EventHandler(this.WelcomeForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
