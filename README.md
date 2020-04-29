@@ -17,7 +17,7 @@ The helper program spawns an invisible Windows Form, and steals focus from the u
 
 ## How to build and install
 
-Open in Visual Studio, make sure to build MiShotHelper first, and then MiShotService. <br>
+Open in Visual Studio, just make sure to build MiFormHelper first, and then MiShotService. <br>
 After building, you can install and start the service by doing this in an elevated command shell:
 
 ```
