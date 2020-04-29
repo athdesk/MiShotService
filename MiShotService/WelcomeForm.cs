@@ -18,16 +18,6 @@ namespace MiShotService
             InitializeComponent();
         }
 
-        private void ButtonInstall_Click(object sender, EventArgs e)
-        {
-            Program.CaseInstall(true);
-        }
-
-        private void ButtonUninstall_Click(object sender, EventArgs e)
-        {
-            Program.CaseUninstall(true);
-        }
-
         private void ButtonRun_Click(object sender, EventArgs e)
         {
            
@@ -37,6 +27,14 @@ namespace MiShotService
         private void ButtonKill_Click(object sender, EventArgs e)
         {
             Program.CaseKill(true);
+        }
+
+        private void CheckAutoStart_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CheckAutoStart.Checked)
+                Program.CaseInstall(true);
+            else
+                Program.CaseUninstall(true);
         }
     }
 }

@@ -59,15 +59,5 @@ namespace MiShotService.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Cerca una risorsa localizzata di tipo System.Byte[].
-        /// </summary>
-        internal static byte[] MiShotHelper {
-            get {
-                object obj = ResourceManager.GetObject("MiShotHelper", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }
