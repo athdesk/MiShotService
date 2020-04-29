@@ -31,7 +31,7 @@ namespace MiShotService
 
 		public static void OpenScreenshotTool()
 		{
-			ExecUtil.StartProcessAsCurrentUser(HelperPath);
+			ExecUtil.StartHelper(HelperPath);
         }
 
         private static void AttachHandler()
