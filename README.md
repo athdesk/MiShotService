@@ -34,5 +34,5 @@ sc delete MiShotService
 
 <hr>
 
-Thanks to [Justin Murray](https://github.com/murrayju) for [CreateProcessAsUser](https://github.com/murrayju/CreateProcessAsUser)
-Thanks to Xiaomi for the original MiOSD software
+Thanks to [Justin Murray](https://github.com/murrayju) for [CreateProcessAsUser](https://github.com/murrayju/CreateProcessAsUser). <br>
+Thanks to Xiaomi for the original MiOSD software.
