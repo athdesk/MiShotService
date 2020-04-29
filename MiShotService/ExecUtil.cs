@@ -172,15 +172,9 @@ namespace MiShotService
         {
             var bResult = false;
             var hImpersonationToken = IntPtr.Zero;
-            var activeSessionId = INVALID_SESSION_ID;
-            var pSessionInfo = IntPtr.Zero;
 
-
-            // If enumerating did not work, fall back to the old method
-            if (activeSessionId == INVALID_SESSION_ID)
-            {
-                activeSessionId = WTSGetActiveConsoleSessionId();
-            }
+            var activeSessionId = WTSGetActiveConsoleSessionId();
+            
 
             if (WTSQueryUserToken(activeSessionId, ref hImpersonationToken) != 0)
             {
@@ -192,11 +186,10 @@ namespace MiShotService
                 CloseHandle(hImpersonationToken);
             }
 
-            WTSFreeMemory(pSessionInfo);
             return bResult;
         }
 
-        public static bool StartProcessAsCurrentUser(string appPath, string cmdLine = null, string workDir = null, bool visible = true)
+        public static bool StartHelper(string HelperPath)
         {
             var hUserToken = IntPtr.Zero;
             var startInfo = new STARTUPINFO();
@@ -208,45 +201,32 @@ namespace MiShotService
 
             try
             {
-                if (!GetSessionUserToken(ref hUserToken))
+                if (!GetSessionUserToken(ref hUserToken) && !CreateEnvironmentBlock(ref pEnv, hUserToken, false))
                 {
-                    throw new Exception("StartProcessAsCurrentUser: GetSessionUserToken failed.");
+                    throw new Exception();
                 }
 
-                uint dwCreationFlags = CREATE_UNICODE_ENVIRONMENT | (uint)(visible ? CREATE_NEW_CONSOLE : CREATE_NO_WINDOW);
-                startInfo.wShowWindow = (short)(visible ? SW.SW_SHOW : SW.SW_HIDE);
+                uint dwCreationFlags = CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW;
+                startInfo.wShowWindow = (short)SW.SW_SHOW;
                 startInfo.lpDesktop = "winsta0\\default";
 
-                if (!CreateEnvironmentBlock(ref pEnv, hUserToken, false))
-                {
-                    throw new Exception("StartProcessAsCurrentUser: CreateEnvironmentBlock failed.");
-                }
-
-                if (!CreateProcessAsUser(hUserToken,
-                    appPath, // Application Name
-                    cmdLine, // Command Line
+                CreateProcessAsUser(hUserToken,
+                    HelperPath, // Application Name
+                    null, // Command Line
                     IntPtr.Zero,
                     IntPtr.Zero,
                     false,
                     dwCreationFlags,
                     pEnv,
-                    workDir, // Working directory
+                    null, // Working directory
                     ref startInfo,
-                    out procInfo))
-                {
-                    iResultOfCreateProcessAsUser = Marshal.GetLastWin32Error();
-                    throw new Exception("StartProcessAsCurrentUser: CreateProcessAsUser failed.  Error Code -" + iResultOfCreateProcessAsUser);
-                }
-
-                iResultOfCreateProcessAsUser = Marshal.GetLastWin32Error();
+                    out procInfo);
+                
             }
             finally
             {
-                CloseHandle(hUserToken);
-                if (pEnv != IntPtr.Zero)
-                {
-                    DestroyEnvironmentBlock(pEnv);
-                }
+                CloseHandle(hUserToken);         
+                DestroyEnvironmentBlock(pEnv);
                 CloseHandle(procInfo.hThread);
                 CloseHandle(procInfo.hProcess);
             }

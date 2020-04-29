@@ -53,6 +53,12 @@ namespace MiFormHelper
 		private void FocusForm_Load(object sender, EventArgs e)
 		{
 			this.Activate();
+			OffloadTimer.Enabled = true;
+		}
+
+		private void OffloadTick(object sender, EventArgs e)
+		{
+			OffloadTimer.Enabled = false;
 			OpenScreenshotTool();
 			Application.Exit();
 		}
