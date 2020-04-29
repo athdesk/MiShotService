@@ -21,7 +21,7 @@ The invisible form steals focus from the user so that it can work even if elevat
 
 ## How to build and install
 
-Open in Visual Studioand build MiShotService. <br>
+Open in Visual Studio and build MiShotService. No libraries or resources are needed anymore. <br>
 After building the program, or downloading a binary release, you can install the service by opening its executable and checking the autostart checkbox. <br>
 Note that the service is registered by it's current path, so if you want to install it for the long term, copying it first in the wanted target directory is recommended. I personally use `C:\MiShot\MiShotService.exe` , but anything will work. You can change the registered path by moving the executable in the new target directory, running it and re-checking the autostart checkbox.
 
@@ -31,4 +31,4 @@ You can use the same GUI you used to install it. Just open the executable and un
 
 <hr>
 
-Thanks to Xiaomi for the original MiOSD software.
+Thanks to Xiaomi for the original MiOSD software. <br>
