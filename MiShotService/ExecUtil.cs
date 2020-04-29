@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -189,7 +192,7 @@ namespace MiShotService
             return bResult;
         }
 
-        public static bool StartHelper(string HelperPath)
+        public static bool StartHelper(string HelperPath, string CmdLine = null)
         {
             var hUserToken = IntPtr.Zero;
             var startInfo = new STARTUPINFO();
@@ -205,13 +208,13 @@ namespace MiShotService
                     throw new Exception();
                 }
 
-                uint dwCreationFlags = CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW;
+                uint dwCreationFlags = CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE;
                 startInfo.wShowWindow = (short)SW.SW_SHOW;
                 startInfo.lpDesktop = "winsta0\\default";
 
                 CreateProcessAsUser(hUserToken,
                     HelperPath, // Application Name
-                    null, // Command Line
+                    CmdLine, // Command Line
                     IntPtr.Zero,
                     IntPtr.Zero,
                     false,
@@ -233,5 +236,43 @@ namespace MiShotService
             return true;
         }
 
+        public static bool KillOthers()
+        {
+            Process MeProcess = Process.GetCurrentProcess();
+            string ProcName = MeProcess.ProcessName;
+            int MePID = MeProcess.Id;
+
+            bool NeedPrivileges = false;
+
+            Process[] GlobInstances = Process.GetProcessesByName(ProcName);
+            foreach (Process Instance in GlobInstances)
+            {
+                if (Instance.Id != MePID)
+                {
+                    try
+                    {
+                        Instance.Kill();
+                    }
+                    catch (Win32Exception)
+                    {
+                        NeedPrivileges = true;
+                    }
+                }
+            }
+            return !NeedPrivileges;
+        }
+
+        public static void ElevateMe(string CmdArgs)
+        {
+            string ExePath = Assembly.GetEntryAssembly().Location;
+            ProcessStartInfo StartMe = new ProcessStartInfo(ExePath, CmdArgs)
+            {
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+
+            Process.Start(StartMe);
+            Environment.Exit(0);
+        }
     }
 }

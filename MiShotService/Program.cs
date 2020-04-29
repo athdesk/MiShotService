@@ -1,10 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Management.Instrumentation;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -127,60 +124,38 @@ namespace MiShotService
         public const string ARG_INSTALL = "install";
         public const string ARG_UNINSTALL = "uninstall";
         public const string ARG_STANDALONE = "standalone";
-        private const string SERVICE_NAME = "MiShotService";
         private const string DISPLAY_NAME = "MiShot";
 
-        public static MiShot RunningInstance = null;
-        private static string ExePath;
+        public static string ExePath;
+        private static string RegCmdLine;
 
-        private static void RunService()
+        public static void SetStartup(bool AutoStart)
         {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
-            {
-                new MiShot()
-            };
-            ServiceBase.Run(ServicesToRun);
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey
+            ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+            if (AutoStart)
+                rk.SetValue(DISPLAY_NAME, RegCmdLine);
+            else
+                rk.DeleteValue(DISPLAY_NAME, false);
         }
 
-        private static void ElevateMe(string CmdArgs)
+        private static void StallThread()
         {
-            ProcessStartInfo StartMe = new ProcessStartInfo(ExePath, CmdArgs)
-            {
-                UseShellExecute = true,
-                Verb = "runas"
-            };
-
-            Process.Start(StartMe);
-            Application.Exit();
+            while (true)
+                Thread.Sleep(60000);
         }
 
         public static void CaseInstall(bool FromForm = false)
         {
             if (!IsProcessElevated)
             {
-                ElevateMe(ARG_INSTALL);
+                ExecUtil.ElevateMe(ARG_INSTALL);
             } else
             {
-                bool Reinstall = ServiceInstaller.ServiceIsInstalled(SERVICE_NAME);
-                          
-
-                Application.EnableVisualStyles();
-                if (Reinstall)
-                {
-                    MessageBox.Show("Service is already installed");
-                }
-                else
-                {
-                    ServiceInstaller.InstallAndStart(SERVICE_NAME, DISPLAY_NAME, ExePath);
-                    MessageBox.Show("Successfully installed the MiShot Service");
-                }
-
-                
+                SetStartup(true);
                 if (!FromForm)
-                {
                     OpenForm();
-                }
             }
         }
 
@@ -189,75 +164,33 @@ namespace MiShotService
         {
             if (!IsProcessElevated)
             {
-                ElevateMe(ARG_UNINSTALL);
+                ExecUtil.ElevateMe(ARG_UNINSTALL);
             }
             else
             {
-                Application.EnableVisualStyles();
-                bool WasInstalled = ServiceInstaller.ServiceIsInstalled(SERVICE_NAME);
-                if (WasInstalled)
-                {
-                    ServiceInstaller.Uninstall(SERVICE_NAME);
-                    MessageBox.Show("Successfully uninstalled the MiShot Service");
-                }
-                else
-                {
-                    MessageBox.Show("Service was not installed");
-                }
-                
+                SetStartup(false);
                 if (!FromForm)
-                {
                     OpenForm();
-                }
             }
         }
 
-        public static void CaseStandalone()
+        public static void CaseStandalone(bool FromForm = false)
         {
-            if (RunningInstance == null) 
-            { 
-                RunningInstance = new MiShot(); 
-            } else
-            {
-                RunningInstance.Stop();
-            }
-            RunningInstance.Start();
+            MiShotUser.Stop();
+            MiShotUser.Start();
+            if (!FromForm)
+                StallThread();
         }
 
         public static void CaseKill(bool FromForm = false)
         {
-            Process MeProcess = Process.GetCurrentProcess();
-            string ProcName = MeProcess.ProcessName;
-            int MePID = MeProcess.Id;
+            MiShotUser.Stop();
 
-            bool NeedPrivileges = false;
-
-            Process[] GlobInstances = Process.GetProcessesByName(ProcName);
-            foreach (Process Instance in GlobInstances)
-            {
-                if (Instance.Id != MePID)
-                {
-                    try
-                    {
-                        Instance.Kill();
-                    }
-                    catch (Win32Exception)
-                    {
-                        NeedPrivileges = true;
-                    }
-                }
-            }
-
-            if (NeedPrivileges)
-            {
-                ElevateMe(ARG_KILL);
-            }
+            if (!ExecUtil.KillOthers())
+                ExecUtil.ElevateMe(ARG_KILL);
 
             if (!FromForm)
-            {
                 OpenForm();
-            }
-
         }
 
         private static void OpenForm()
@@ -270,6 +203,7 @@ namespace MiShotService
         static void Main(string[] Args)
         {
             ExePath = Assembly.GetEntryAssembly().Location;
+            RegCmdLine = ExePath + " " + ARG_STANDALONE;
             if (Environment.UserInteractive)
             {
                 if (Args.Length > 0)
@@ -299,7 +233,7 @@ namespace MiShotService
             }
             else
             {
-                RunService();
+                // TODO: fix
             }
         
         }

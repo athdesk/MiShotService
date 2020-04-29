@@ -30,21 +30,12 @@ namespace MiShotService
 
         private void ButtonRun_Click(object sender, EventArgs e)
         {
-            if (Program.RunningInstance != null)
-            {
-                Program.RunningInstance.Stop();
-                Program.RunningInstance.Dispose();
-            }
-            Program.CaseStandalone();
+           
+            Program.CaseStandalone(true);
         }
 
         private void ButtonKill_Click(object sender, EventArgs e)
         {
-            if (Program.RunningInstance != null)
-            {
-                Program.RunningInstance.Stop();
-                Program.RunningInstance.Dispose();
-            }
             Program.CaseKill(true);
         }
     }
