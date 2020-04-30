@@ -4,7 +4,7 @@ using System.Threading;
 namespace MiShotService
 {
 
-    class MiShotUser
+    class ScreenshotService
     {
         private static FwInterface FWI;
 
@@ -26,8 +26,8 @@ namespace MiShotService
         
         public static void Start()
         {
-            if (!ExecUtil.KillOthers())
-                ExecUtil.ElevateMe(Program.ARG_STANDALONE);
+            if (!WinInterface.KillOthers())
+                WinInterface.ElevateMe(Program.ARG_STANDALONE);
             AttachHandler();
         }
 
