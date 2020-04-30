@@ -31,7 +31,7 @@ namespace MiShotService
         private ManagementEventWatcher AWatch = new ManagementEventWatcher();
         private WqlEventQuery AQuery = new WqlEventQuery();
         public event EventHandler EventScreenshot;
-        
+        private const string F7_WQUERY = "SELECT * FROM INVHK7_Event";
 
         private void HandleScreenshot(object sender, EventArrivedEventArgs e)
         {
@@ -58,7 +58,7 @@ namespace MiShotService
 
         private void AttachEvents()
         {
-            AQuery = new WqlEventQuery("SELECT * FROM INVHK7_Event");
+            AQuery = new WqlEventQuery(F7_WQUERY);
             AWatch = new ManagementEventWatcher(new ManagementScope("root/WMI"), AQuery);
             AWatch.EventArrived += HandleScreenshot;
             AWatch.Start();

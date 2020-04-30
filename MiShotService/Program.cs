@@ -1,9 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
+﻿using System;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -96,10 +91,10 @@ namespace MiShotService
                         CaseKill();
                         break;
                     default:
-                        break;
+                        throw new Exception();
                 }
             }
-            finally
+            catch (Exception)
             {
                 OpenForm();
             }
